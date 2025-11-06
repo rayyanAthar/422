@@ -20,12 +20,12 @@ const io = new Server(server, {
 let pins = [
   {
     id: 1,
-    location: "Pilsen, Chicago",
-    artist: "Sofia Morales",
-    song: "Tierra",
-    audio_url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    lat: 41.856,
-    lng: -87.675,
+    location: "Hyde Park",
+    artist: "MOHMOHRAP",
+    song: "Dollarz",
+    audio_url: "https://oleafkuh.github.io/soundplace-tracks/MOHMOHRAP%20-%20Dollarz.mp3",
+    lat: 41.794,
+    lng: -87.589,
   },
   {
     id: 2,
