@@ -9,6 +9,12 @@ const songInfo = document.getElementById("songInfo");
 const playBtn = document.getElementById("playBtn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
+const showQueueBtn = document.getElementById("showQueueBtn");
+const queueDiv = document.getElementById("queue");
+const mainDiv = document.getElementById("main");
+const seekSlider = document.getElementById("seekSlider");
+const timeLabel = document.getElementById("timeLabel");
+
 let currentSong = null;
 let songIndex = -1;
 songQueue = [];
@@ -26,6 +32,9 @@ socket.on("pins", (pins) => {
     `);
   });
 });
+
+spacer.style.display = "none";
+mainDiv.style.width = "100%";
 
 // Local playback (not shared)
 window.playSong = (url, title, artist) => {
@@ -50,9 +59,7 @@ window.queueSong = (url, title, artist) => {
     queue.appendChild(newSong);
 };
 
-const seekSlider = document.getElementById("seekSlider");
-const timeLabel = document.getElementById("timeLabel");
-
+{
 // Update slider max when song metadata loads
 audioPlayer.addEventListener("loadedmetadata", () => {
   seekSlider.max = audioPlayer.duration;
@@ -71,6 +78,20 @@ seekSlider.addEventListener("input", () => {
   updateTimeLabel();
 });
 
+// Auto-play next song when current ends
+audioPlayer.onended = () => {
+  if (songIndex < songQueue.length - 1) {
+    songIndex++;
+    const song = songQueue[songIndex];
+    playSong(song.url, song.title, song.artist);
+    queueDiv.removeChild(queueDiv.firstChild);
+  } else {
+    currentSong = null;
+    songInfo.textContent = "No song playing";
+    playBtn.textContent = "▶️";
+  }
+};
+
 // Function to update time label
 function updateTimeLabel() {
   const current = formatTime(audioPlayer.currentTime);
@@ -84,6 +105,7 @@ function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = Math.floor(seconds % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
+}
 }
 
 // Toggle play/pause
@@ -113,18 +135,20 @@ nextBtn.onclick = () => {
     songIndex++;
     const song = songQueue[songIndex];
     playSong(song.url, song.title, song.artist);
+    queueDiv.removeChild(queueDiv.firstChild); 
   }
 };
 
-// Auto-play next song when current ends
-audioPlayer.onended = () => {
-  if (songIndex < songQueue.length - 1) {
-    songIndex++;
-    const song = songQueue[songIndex];
-    playSong(song.url, song.title, song.artist);
-  } else {
-    currentSong = null;
-    songInfo.textContent = "No song playing";
-    playBtn.textContent = "▶️";
-  }
-};
+showQueueBtn.onclick = () => { 
+    if (spacer.style.display === "none") {
+        spacer.style.display = "flex";
+        showQueueBtn.textContent = "Hide Queue";
+        mainDiv.style.width = "80%";
+
+    } else {
+        spacer.style.display = "none";
+        showQueueBtn.textContent = "Show Queue";
+        mainDiv.style.width = "100%";
+    }
+}
+
