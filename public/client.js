@@ -1,7 +1,7 @@
 const socket = io();
 const map = L.map("map").setView([41.8781, -87.6298], 12);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: "&copy; OpenStreetMap contributors"
+    attribution: "&copy; OpenStreetMap contributors"
 }).addTo(map);
 
 const audioPlayer = new Audio();
@@ -22,34 +22,33 @@ songQueue = [];
 socket.on("connect", () => console.log("Connected:", socket.id));
 
 socket.on("pins", (pins) => {
-  pins.forEach(pin => {
-    const marker = L.marker([pin.lat, pin.lng]).addTo(map);
-    marker.bindPopup(`
-      <b>${pin.artist}</b><br>
-      <i>${pin.song}</i><br><br>
-      <button onclick="playSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Play</button>
-      <button onclick="queueSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Queue</button>
-    `);
-  });
+    pins.forEach(pin => {
+        const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+        marker.bindPopup(`
+        <b>${pin.artist}</b><br>
+        <i>${pin.song}</i><br><br>
+        <button onclick="playSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Play</button>
+        <button onclick="queueSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Queue</button>
+        `);
+    });
 });
 
 spacer.style.display = "none";
 mainDiv.style.width = "100%";
 
-// Local playback (not shared)
+// Play song from pin
 window.playSong = (url, title, artist) => {
-  currentSong = { url, title, artist };
-  audioPlayer.src = url;
-  audioPlayer.crossOrigin = "anonymous";
-  audioPlayer.play()
-    .then(() => console.log("Playing:", title))
-    .catch(err => console.error("Playback failed:", err));
-  songInfo.textContent = `${artist} — ${title}`;
-  playBtn.textContent = "⏸️";
-
+    currentSong = { url, title, artist };
+    audioPlayer.src = url;
+    audioPlayer.crossOrigin = "anonymous";
+    audioPlayer.play()
+        .then(() => console.log("Playing:", title))
+        .catch(err => console.error("Playback failed:", err));
+    songInfo.textContent = `${artist} — ${title}`;
+    playBtn.textContent = "⏸️";
 };
 
-// Local playback (not shared)
+// Queue song from pin
 window.queueSong = (url, title, artist) => {
     songQueue.push({ url, title, artist });
     console.log("Queued:", title);
@@ -62,83 +61,84 @@ window.queueSong = (url, title, artist) => {
 {
 // Update slider max when song metadata loads
 audioPlayer.addEventListener("loadedmetadata", () => {
-  seekSlider.max = audioPlayer.duration;
-  updateTimeLabel();
+    seekSlider.max = audioPlayer.duration;
+    updateTimeLabel();
 });
 
 // Update slider as audio plays
 audioPlayer.addEventListener("timeupdate", () => {
-  seekSlider.value = audioPlayer.currentTime;
-  updateTimeLabel();
+    seekSlider.value = audioPlayer.currentTime;
+    updateTimeLabel();
 });
 
 // Seek to a position when slider changes
 seekSlider.addEventListener("input", () => {
-  audioPlayer.currentTime = seekSlider.value;
-  updateTimeLabel();
+    audioPlayer.currentTime = seekSlider.value;
+    updateTimeLabel();
 });
 
 // Auto-play next song when current ends
 audioPlayer.onended = () => {
-  if (songIndex < songQueue.length - 1) {
-    songIndex++;
-    const song = songQueue[songIndex];
-    playSong(song.url, song.title, song.artist);
-    queueDiv.removeChild(queueDiv.firstChild);
-  } else {
-    currentSong = null;
-    songInfo.textContent = "No song playing";
-    playBtn.textContent = "▶️";
-  }
+    if (songIndex < songQueue.length - 1) {
+        songIndex++;
+        const song = songQueue[songIndex];
+        playSong(song.url, song.title, song.artist);
+        queueDiv.removeChild(queueDiv.firstChild);
+    } else {
+        currentSong = null;
+        songInfo.textContent = "No song playing";
+        playBtn.textContent = "▶️";
+    }
 };
 
 // Function to update time label
 function updateTimeLabel() {
-  const current = formatTime(audioPlayer.currentTime);
-  const total = formatTime(audioPlayer.duration);
-  timeLabel.textContent = `${current} / ${total}`;
+    const current = formatTime(audioPlayer.currentTime);
+    const total = formatTime(audioPlayer.duration);
+    timeLabel.textContent = `${current} / ${total}`;
 }
 
 // Format seconds to mm:ss
 function formatTime(seconds) {
-  if (isNaN(seconds)) return "0:00";
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
+    if (isNaN(seconds)) return "0:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
 }
 }
 
 // Toggle play/pause
 playBtn.onclick = () => {
-  if (!currentSong) return;
-  if (audioPlayer.paused) {
-    audioPlayer.play();
-    playBtn.textContent = "⏸️";
-  } else {
-    audioPlayer.pause();
-    playBtn.textContent = "▶️";
-  }
+    if (!currentSong) return;
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playBtn.textContent = "⏸️";
+    } else {
+        audioPlayer.pause();
+        playBtn.textContent = "▶️";
+    }
 };
 
 // Play previous song in queue
 prevBtn.onclick = () => {
-  if (songIndex > 0) {
-    songIndex--;
-    const song = songQueue[songIndex];
-    playSong(song.url, song.title, song.artist);
-  }
+    if (songIndex > 0) {
+        songIndex--;
+        const song = songQueue[songIndex];
+        playSong(song.url, song.title, song.artist);
+    }
 }
 
 // Play next song in queue
 nextBtn.onclick = () => {
-  if (songIndex < songQueue.length - 1) {
-    songIndex++;
-    const song = songQueue[songIndex];
-    playSong(song.url, song.title, song.artist);
-    queueDiv.removeChild(queueDiv.firstChild); 
-  }
+    if (songIndex < songQueue.length - 1) {
+        songIndex++;
+        const song = songQueue[songIndex];
+        playSong(song.url, song.title, song.artist);
+        queueDiv.removeChild(queueDiv.firstChild); 
+    }
 };
 
+// Show/hide queue
 showQueueBtn.onclick = () => { 
     if (spacer.style.display === "none") {
         spacer.style.display = "flex";
@@ -151,4 +151,3 @@ showQueueBtn.onclick = () => {
         mainDiv.style.width = "100%";
     }
 }
-

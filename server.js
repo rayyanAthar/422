@@ -62,16 +62,24 @@ const pins = [
     lat: 41.908,
     lng: -87.757,
     audio_url: "https://rayyanathar.github.io/music/www.cabinet-avocat-cadet.fr - Drake - Skepta Interlude (320 KBps).mp3"
+  },
+  {
+    id: 6,
+    artist: "Kanye West",
+    song: "Bittersweet Poetry",
+    location: "Logan Square, Chicago",
+    lat: 41.888,
+    lng: -87.757,
+    audio_url: "https://rayyanathar.github.io/music/www.cabinet-avocat-cadet.fr - KanYe WesT - Bittersweet Poetry (320 KBps).mp3"
   }
+
 ];
 
-// HTTP endpoint (optional)
 app.get("/api/pins", (req, res) => res.json(pins));
 
-// Socket.io
 io.on("connection", (socket) => {
   console.log("🟢 Client connected:", socket.id);
-  socket.emit("pins", pins); // send pins only to new client
+  socket.emit("pins", pins); 
 
   socket.on("disconnect", () => {
     console.log("🔴 Client disconnected:", socket.id);

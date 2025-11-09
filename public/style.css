@@ -4,14 +4,12 @@ body, html {
     height: 100%;
 }
 
-/* Main horizontal layout: main area + right sidebar */
 #layout {
     display: flex;
     height: 100%;
     width: 100%;
 }
 
-/* Main content (map + player) */
 #main {
     display: flex;
     flex-direction: column;
@@ -20,13 +18,11 @@ body, html {
 }
 
 
-/* Map fills most of the space */
 #map {
     flex: 1;
     width: 100%;
 }
 
-/* Player fixed at bottom of main section */
 #player {
     height: 10%;
     background: #222;
@@ -42,7 +38,8 @@ body, html {
     color: #fff;
     font-family: Arial, sans-serif;
     align-items: center;
-    /* margin: 0 10px; */
+    padding-top: 0px;
+    padding-bottom: 10px;
 }
 
 #seekSlider {
@@ -74,7 +71,6 @@ body, html {
     margin-top: 0px;
 }
 
-/* Queue sidebar on the RIGHT now */
 #queue {
     height: 100%;
     background: #222;;
