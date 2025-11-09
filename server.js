@@ -1,74 +1,83 @@
+// server.js
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const path = require("path");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-const PORT = 3000;
 const server = http.createServer(app);
-
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
+  cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
-let pins = [
+const PORT = process.env.PORT || 3000;
+
+const pins = [
   {
     id: 1,
-    location: "Hyde Park",
-    artist: "MOHMOHRAP",
-    song: "Dollarz",
-    audio_url: "https://oleafkuh.github.io/soundplace-tracks/MOHMOHRAP%20-%20Dollarz.mp3",
-    lat: 41.794,
-    lng: -87.589,
+    artist: "Kanye West",
+    song: "Flashing Lights",
+    location: "Logan Square, Chicago",
+    lat: 41.928,
+    lng: -87.707,
+    audio_url: "https://rayyanathar.github.io/music/www.cabinet-avocat-cadet.fr%20-%20Kanye%20West%20-%20Flashing%20Lights%20(320%20KBps).mp3"
   },
   {
     id: 2,
-    location: "Logan Square, Chicago",
-    artist: "HoliznaCC",
-    song: "City Lights",
-    audio_url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    lat: 41.928,
-    lng: -87.707,
+    artist: "Drake",
+    song: "9",
+    location: "Hyde Park, Chicago",
+    lat: 41.874,
+    lng: -87.657,
+    audio_url: "https://rayyanathar.github.io/music/www.cabinet-avocat-cadet.fr - Drake - 9 (320 KBps).mp3"
   },
+  {
+    id: 3,
+    artist: "Travis Scott",
+    song: "Maria Im Drunk",
+    location: "Hyde Park, Chicago",
+    lat: 41.908,
+    lng: -87.707,
+    audio_url: "https://rayyanathar.github.io/music/www.cabinet-avocat-cadet.fr - Travis Scott - Maria I m Drunk (320 KBps).mp3"
+  },
+  {
+    id: 4,
+    artist: "Lil Uzi Vert",
+    song: "Erase Your Social",
+    location: "Logan Square, Chicago",
+    lat: 41.928,
+    lng: -87.757,
+    audio_url: "https://rayyanathar.github.io/music/www.cabinet-avocat-cadet.fr - Lil Uzi Vert - Erase Your Social Produced By Don Cannon Lyle LeDuff (320 KBps).mp3"
+  },
+  {
+    id: 5,
+    artist: "Skepta",
+    song: "Interlude",
+    location: "Logan Square, Chicago",
+    lat: 41.908,
+    lng: -87.757,
+    audio_url: "https://rayyanathar.github.io/music/www.cabinet-avocat-cadet.fr - Drake - Skepta Interlude (320 KBps).mp3"
+  }
 ];
 
-// HTTP fallback route
+// HTTP endpoint (optional)
 app.get("/api/pins", (req, res) => res.json(pins));
 
+// Socket.io
 io.on("connection", (socket) => {
-  console.log(`🟢 Client connected: ${socket.id}`);
-
-  // Send pins only to the connected client
-  socket.emit("message", {
-    type: "init",
-    payload: pins,
-  });
-
-  // Handle when a client adds a new pin (broadcast to all)
-  socket.on("message", (msg) => {
-    switch (msg.type) {
-      case "addPin":
-        pins.push(msg.payload);
-        // Broadcast the new pin to everyone *except the sender*
-        socket.broadcast.emit("message", {
-          type: "newPin",
-          payload: msg.payload,
-        });
-        break;
-      default:
-        console.log(`Ignored message type: ${msg.type}`);
-    }
-  });
+  console.log("🟢 Client connected:", socket.id);
+  socket.emit("pins", pins); // send pins only to new client
 
   socket.on("disconnect", () => {
-    console.log(`🔴 Client disconnected: ${socket.id}`);
+    console.log("🔴 Client disconnected:", socket.id);
   });
 });
 
-server.listen(PORT, () => console.log(`✅ Server running at http://localhost:${PORT}`));
+server.listen(PORT, () => {
+  console.log(`✅ Server running at http://localhost:${PORT}`);
+});
