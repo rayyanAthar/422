@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "artist": "kesta",
+        "song": "To Come Home",
+        "location": "Near South Side",
+        "lat": 41.895,
+        "lng": -87.62,
+        "audio_url": "https://oleafkuh.github.io/soundplace-tracks/Ketsa%20-%20To%20Come%20Home.mp3"
+    },
+    {
+        "id": 2,
+        "artist": "SunnyScy",
+        "song": "Its a Party!q",
+        "location": "Loop",
+        "lat": 41.884,
+        "lng": -87.628,
+        "audio_url": "https://oleafkuh.github.io/soundplace-tracks/SunnyScy%20-%20It%27s%20a%20Party%21.mp3"
+    },
+    {
+        "id": 3,
+        "artist": "Class Candy",
+        "song": "Iko! Iko!",
+        "location": "Near South Side",
+        "lat": 41.83,
+        "lng": -87.62,
+        "audio_url": "https://oleafkuh.github.io/soundplace-tracks/Glass%20Candy%20-%20Iko%21%20Iko%21.mp3"
+    },
+    {
+        "id": 4,
+        "artist": "De Portables",
+        "song": "Here I Stand",
+        "location": "Pilsen",
+        "lat": 41.85476875540036,
+        "lng": -87.65360582198085,
+        "audio_url": "https://oleafkuh.github.io/soundplace-tracks/De%20Portables%20-%20Here%20I%20Stand.mp3"
+    },
+    {
+        "id": 5,
+        "artist": "MOHMOHRAP",
+        "song": "Dollarz",
+        "location": "Hyde Park",
+        "lat": 41.794,
+        "lng": -87.589,
+        "audio_url": "https://oleafkuh.github.io/soundplace-tracks/MOHMOHRAP%20-%20Dollarz.mp3"
+    }
+]

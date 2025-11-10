@@ -17,7 +17,7 @@ const timeLabel = document.getElementById("timeLabel");
 
 let currentSong = null;
 let songIndex = -1;
-songQueue = [];
+let songQueue = [];
 
 socket.on("connect", () => console.log("Connected:", socket.id));
 
