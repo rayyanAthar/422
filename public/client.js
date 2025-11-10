@@ -38,7 +38,7 @@ window.addEventListener("DOMContentLoaded", () => {
     
     socket.on("pins", (pins) => {
         pins.forEach(pin => {
-            const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+            const marker = L.marker([pin.lat, pin.lng], { icon: redIcon }).addTo(map);
     
             // Bind a simple popup container
             marker.bindPopup(`
