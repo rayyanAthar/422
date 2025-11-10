@@ -97,14 +97,15 @@ showQueueBtn.onclick = () => {
     if (spacer.style.display === "none") {
         spacer.style.display = "flex";
         showQueueBtn.textContent = "Hide Queue";
+        showQueueBtn.classList.add("active"); // highlight when active
         mainDiv.style.width = "80%";
-
     } else {
         spacer.style.display = "none";
         showQueueBtn.textContent = "Show Queue";
+        showQueueBtn.classList.remove("active");
         mainDiv.style.width = "100%";
     }
-}
+}:
 
 
 
