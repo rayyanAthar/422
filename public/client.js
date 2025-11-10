@@ -26,12 +26,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
     socket.on("pins", (pins) => {
         pins.forEach(pin => {
-            const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+            const marker = L.circleMarker([pin.lat, pin.lng], {
+                radius: 8,
+                fillColor: "#b30000",  // deep red
+                color: "#b30000",      // border color
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.9
+            }).addTo(map);
+    
             marker.bindPopup(`
-            <b>${pin.artist}</b><br>
-            <i>${pin.song}</i><br><br>
-            <button onclick="playSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Play</button>
-            <button onclick="queueSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Queue</button>
+                <b>${pin.artist}</b><br>
+                <i>${pin.song}</i><br><br>
+                <button onclick="playSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Play</button>
+                <button onclick="queueSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Queue</button>
             `);
         });
     });
