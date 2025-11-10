@@ -64,6 +64,16 @@ window.addEventListener("DOMContentLoaded", () => {
         newSong.textContent = `${artist} — ${title}`;
         const queue = document.getElementById("queue");
         queue.appendChild(newSong);
+
+        // Show notification
+        const notification = document.getElementById("notification");
+        notification.textContent = `"${title}" added to queue`;
+        notification.style.opacity = 1;
+    
+        // Hide after 1.5 seconds
+        setTimeout(() => {
+            notification.style.opacity = 0;
+        }, 1500);
     };
 
     // Toggle play/pause
