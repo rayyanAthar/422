@@ -29,7 +29,7 @@ window.addEventListener("DOMContentLoaded", () => {
         pins.forEach(pin => {
             const marker = L.marker([pin.lat, pin.lng]).addTo(map);
     
-            // Use simple HTML in bindPopup
+            // Bind a simple popup container
             marker.bindPopup(`
                 <div class="popup-content">
                     <b>${pin.artist}</b><br>
@@ -39,15 +39,22 @@ window.addEventListener("DOMContentLoaded", () => {
                 </div>
             `);
     
-            // Attach event listeners when the popup opens
-            marker.on("popupopen", (e) => {
+            // Attach button listeners when popup opens
+            marker.on("popupopen", function(e) {
                 const popupEl = e.popup.getElement();
-                const playBtnPopup = popupEl.querySelector(".popup-play-btn");
-                const queueBtnPopup = popupEl.querySelector(".popup-queue-btn");
     
-                playBtnPopup.onclick = () => playSong(pin.audio_url, pin.song, pin.artist);
+                const playBtn = popupEl.querySelector(".popup-play-btn");
+                const queueBtn = popupEl.querySelector(".popup-queue-btn");
     
-                queueBtnPopup.onclick = () => {
+                // Remove old event listeners first
+                playBtn.onclick = null;
+                queueBtn.onclick = null;
+    
+                playBtn.addEventListener("click", () => {
+                    playSong(pin.audio_url, pin.song, pin.artist);
+                });
+    
+                queueBtn.addEventListener("click", () => {
                     queueSong(pin.audio_url, pin.song, pin.artist);
     
                     // Show notification
@@ -58,7 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     setTimeout(() => {
                         notification.style.opacity = 0;
                     }, 1500);
-                };
+                });
             });
         });
     });
