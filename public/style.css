@@ -202,3 +202,9 @@ body, html {
 #showQueueBtn:focus {
   outline: none;
 }
+
+#showQueueBtn.active {
+  background-color: #b30000;
+  color: #fff;
+  box-shadow: 0 0 10px #b30000;
+}
