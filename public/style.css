@@ -249,3 +249,16 @@ body, html {
 .leaflet-popup-tip {
     background-color: #333;
 }
+.leaflet-popup-content-wrapper {
+    background: #333;      /* match dark grey */
+    border: none;          /* remove white border */
+    box-shadow: none;      /* remove default shadow */
+}
+
+.leaflet-popup-tip-container {
+    width: 0;
+    height: 0;
+}
+.leaflet-popup-tip {
+    background-color: #333; /* match dark grey */
+}
