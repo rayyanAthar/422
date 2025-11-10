@@ -211,3 +211,41 @@ body, html {
   color: #fff;
   box-shadow: 0 0 10px #b30000;
 }
+
+/* Leaflet popups */
+.leaflet-popup-content {
+    background-color: #333;   /* dark grey background */
+    color: #fff;              /* white text */
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Popup buttons styled like Show Queue button */
+.leaflet-popup-content button {
+    background: none;
+    border: 2px solid #b30000; /* deep red border */
+    color: #b30000;             /* deep red text */
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect for popup buttons */
+.leaflet-popup-content button:hover {
+    background-color: #b30000;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* Popup pointer color */
+.leaflet-popup-tip {
+    background-color: #333;
+}
