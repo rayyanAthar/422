@@ -86,81 +86,95 @@ body, html {
 }
 
 .icon-btn {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   background: none;
-  border: 2px solid #b30000;
-  border-radius: 50%;
+  border: none;
   position: relative;
+  display: inline-block;
   cursor: pointer;
+  margin: 0 8px;
+}
+
+.icon-btn:focus {
+  outline: none; 
 }
 
 /* Play triangle */
-.play::before {
+.icon-btn.play::before {
   content: "";
   position: absolute;
-  left: 15px;
-  top: 10px;
+  left: 14px;
+  top: 8px;
   width: 0;
   height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 15px solid #b30000;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 18px solid #b30000; /* Deep red */
+  transition: all 0.2s ease;
 }
 
 /* Pause bars */
-.play.paused::before,
-.play.paused::after {
+.icon-btn.pause::before,
+.icon-btn.pause::after {
   content: "";
   position: absolute;
-  top: 10px;
-  width: 6px;
-  height: 20px;
+  top: 8px;
+  width: 7px;
+  height: 24px;
   background-color: #b30000;
-}
-.play.paused::before {
-  left: 11px;
-}
-.play.paused::after {
-  right: 11px;
+  transition: all 0.2s ease;
 }
 
-/* Next */
-.next::before,
-.next::after {
-  content: "";
-  position: absolute;
-  top: 10px;
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-}
-.next::before {
+.icon-btn.pause::before {
   left: 10px;
-  border-left: 10px solid #b30000;
-}
-.next::after {
-  left: 20px;
-  border-left: 10px solid #b30000;
 }
 
-/* Previous (mirrored triangles) */
-.prev::before,
-.prev::after {
+.icon-btn.pause::after {
+  right: 10px;
+}
+
+/* Next button (two triangles) */
+.icon-btn.next::before,
+.icon-btn.next::after {
   content: "";
   position: absolute;
-  top: 10px;
+  top: 8px;
   width: 0;
   height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid #b30000;
 }
-.prev::before {
-  right: 10px;
-  border-right: 10px solid #b30000;
+
+.icon-btn.next::before {
+  left: 8px;
 }
-.prev::after {
+.icon-btn.next::after {
+  left: 20px;
+}
+
+/* Previous button (mirrored triangles) */
+.icon-btn.prev::before,
+.icon-btn.prev::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid #b30000;
+}
+
+.icon-btn.prev::before {
+  right: 8px;
+}
+.icon-btn.prev::after {
   right: 20px;
-  border-right: 10px solid #b30000;
+}
+
+/* Subtle press animation */
+.icon-btn:active {
+  transform: scale(0.9);
 }
