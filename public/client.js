@@ -2,7 +2,7 @@ const socket = io();
 
 window.addEventListener("DOMContentLoaded", () => {
     const map = L.map("map").setView([41.8781, -87.6298], 12);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
