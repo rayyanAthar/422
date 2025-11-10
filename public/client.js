@@ -45,7 +45,8 @@ window.playSong = (url, title, artist) => {
         .then(() => console.log("Playing:", title))
         .catch(err => console.error("Playback failed:", err));
     songInfo.textContent = `${artist} — ${title}`;
-    playBtn.textContent = "⏸️";
+    playBtn.classList.remove("play");
+    playBtn.classList.add("pause");
 };
 
 // Queue song from pin
@@ -63,10 +64,12 @@ playBtn.onclick = () => {
     if (!currentSong) return;
     if (audioPlayer.paused) {
         audioPlayer.play();
-        playBtn.textContent = "⏸️";
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
     } else {
         audioPlayer.pause();
-        playBtn.textContent = "▶️";
+        playBtn.classList.remove("pause");
+        playBtn.classList.add("play");
     }
 };
 
@@ -134,7 +137,8 @@ audioPlayer.onended = () => {
     } else {
         currentSong = null;
         songInfo.textContent = "No song playing";
-        playBtn.textContent = "▶️";
+        playBtn.classList.remove("pause");
+        playBtn.classList.add("play");
     }
 };
 
