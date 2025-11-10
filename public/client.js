@@ -24,16 +24,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
     socket.on("connect", () => console.log("Connected:", socket.id));
 
+    const redIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+    
     socket.on("pins", (pins) => {
         pins.forEach(pin => {
-            const marker = L.circleMarker([pin.lat, pin.lng], {
-                radius: 8,
-                fillColor: "#b30000",  // deep red
-                color: "#b30000",      // border color
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.9
-            }).addTo(map);
+            const marker = L.marker([pin.lat, pin.lng], { icon: redIcon }).addTo(map);
     
             marker.bindPopup(`
                 <b>${pin.artist}</b><br>
