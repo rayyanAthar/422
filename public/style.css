@@ -134,7 +134,7 @@ body, html {
   right: 10px;
 }
 
-/* Next button (two triangles) */
+/* Next button  */
 .icon-btn.next::before,
 .icon-btn.next::after {
   content: "";
@@ -154,7 +154,7 @@ body, html {
   left: 20px;
 }
 
-/* Previous button (mirrored triangles) */
+/* Previous button */
 .icon-btn.prev::before,
 .icon-btn.prev::after {
   content: "";
@@ -174,7 +174,31 @@ body, html {
   right: 20px;
 }
 
-/* Subtle press animation */
 .icon-btn:active {
   transform: scale(0.9);
+}
+
+#showQueueBtn {
+  background: none;
+  border: 2px solid #b30000; 
+  color: #b30000; 
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#showQueueBtn:hover {
+  background-color: #b30000; 
+  color: #fff;
+  transform: scale(1.05);
+}
+
+#showQueueBtn:focus {
+  outline: none;
 }
