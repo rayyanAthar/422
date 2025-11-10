@@ -250,9 +250,9 @@ body, html {
     background-color: #333;
 }
 .leaflet-popup-content-wrapper {
-    background: #333;      /* match dark grey */
-    border: none;          /* remove white border */
-    box-shadow: none;      /* remove default shadow */
+    background: #333;     
+    border: none;         
+    box-shadow: none;      
 }
 
 .leaflet-popup-tip-container {
@@ -260,5 +260,23 @@ body, html {
     height: 0;
 }
 .leaflet-popup-tip {
-    background-color: #333; /* match dark grey */
+    background-color: #333; 
+}
+
+#notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #222;    
+    color: #b30000;            
+    border: 2px solid #b30000; 
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
 }
