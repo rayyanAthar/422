@@ -25,12 +25,12 @@ window.addEventListener("DOMContentLoaded", () => {
     socket.on("connect", () => console.log("Connected:", socket.id));
 
     const redPinIcon = L.icon({
-        iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png', 
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-red.png', 
         shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-        iconSize: [25, 41],   
-        iconAnchor: [12, 41], 
-        popupAnchor: [1, -34], 
-        shadowSize: [41, 41] 
+        iconSize:     [25, 41],  
+        iconAnchor:   [12, 41],  
+        popupAnchor:  [1, -34], 
+        shadowSize:   [41, 41]
     });
     
     socket.on("pins", (pins) => {
@@ -45,7 +45,6 @@ window.addEventListener("DOMContentLoaded", () => {
             `);
         });
     });
-
     spacer.style.display = "none";
     mainDiv.style.width = "100%";
 
