@@ -58,6 +58,53 @@ window.queueSong = (url, title, artist) => {
     queue.appendChild(newSong);
 };
 
+// Toggle play/pause
+playBtn.onclick = () => {
+    if (!currentSong) return;
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        playBtn.textContent = "⏸️";
+    } else {
+        audioPlayer.pause();
+        playBtn.textContent = "▶️";
+    }
+};
+
+// Play previous song in queue
+prevBtn.onclick = () => {
+    if (songIndex > 0) {
+        songIndex--;
+        const song = songQueue[songIndex];
+        playSong(song.url, song.title, song.artist);
+    }
+}
+
+// Play next song in queue
+nextBtn.onclick = () => {
+    if (songIndex < songQueue.length - 1) {
+        songIndex++;
+        const song = songQueue[songIndex];
+        playSong(song.url, song.title, song.artist);
+        queueDiv.removeChild(queueDiv.firstChild); 
+    }
+};
+
+// Show/hide queue
+showQueueBtn.onclick = () => { 
+    if (spacer.style.display === "none") {
+        spacer.style.display = "flex";
+        showQueueBtn.textContent = "Hide Queue";
+        mainDiv.style.width = "80%";
+
+    } else {
+        spacer.style.display = "none";
+        showQueueBtn.textContent = "Show Queue";
+        mainDiv.style.width = "100%";
+    }
+}
+
+
+
 {
 // Update slider max when song metadata loads
 audioPlayer.addEventListener("loadedmetadata", () => {
@@ -105,49 +152,4 @@ function formatTime(seconds) {
     const s = Math.floor(seconds % 60);
     return `${m}:${s.toString().padStart(2, "0")}`;
 }
-}
-
-// Toggle play/pause
-playBtn.onclick = () => {
-    if (!currentSong) return;
-    if (audioPlayer.paused) {
-        audioPlayer.play();
-        playBtn.textContent = "⏸️";
-    } else {
-        audioPlayer.pause();
-        playBtn.textContent = "▶️";
-    }
-};
-
-// Play previous song in queue
-prevBtn.onclick = () => {
-    if (songIndex > 0) {
-        songIndex--;
-        const song = songQueue[songIndex];
-        playSong(song.url, song.title, song.artist);
-    }
-}
-
-// Play next song in queue
-nextBtn.onclick = () => {
-    if (songIndex < songQueue.length - 1) {
-        songIndex++;
-        const song = songQueue[songIndex];
-        playSong(song.url, song.title, song.artist);
-        queueDiv.removeChild(queueDiv.firstChild); 
-    }
-};
-
-// Show/hide queue
-showQueueBtn.onclick = () => { 
-    if (spacer.style.display === "none") {
-        spacer.style.display = "flex";
-        showQueueBtn.textContent = "Hide Queue";
-        mainDiv.style.width = "80%";
-
-    } else {
-        spacer.style.display = "none";
-        showQueueBtn.textContent = "Show Queue";
-        mainDiv.style.width = "100%";
-    }
 }

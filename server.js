@@ -83,7 +83,7 @@ const PORT = process.env.PORT || 3000;
 
 
 
-const raw = fs.readFileSync("pins.json", "utf-8");
+const raw = fs.readFileSync("database/pins.json", "utf-8");
 const pins = JSON.parse(raw);
 
 app.get("/api/pins", (req, res) => res.json(pins));
