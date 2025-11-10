@@ -25,7 +25,7 @@ window.addEventListener("DOMContentLoaded", () => {
     socket.on("connect", () => console.log("Connected:", socket.id));
 
     const redPinIcon = L.icon({
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-red.png', 
+        iconUrl: '/marker-icon-red.png', 
         shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
         iconSize:     [25, 41],  
         iconAnchor:   [12, 41],  
