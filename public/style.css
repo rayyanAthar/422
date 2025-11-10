@@ -84,3 +84,83 @@ body, html {
     flex-direction: column;
 
 }
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: 2px solid #50e3cd;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Play triangle */
+.play::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 15px solid #50e3cd;
+}
+
+/* Pause bars */
+.play.paused::before,
+.play.paused::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  width: 6px;
+  height: 20px;
+  background-color: #50e3cd;
+}
+.play.paused::before {
+  left: 11px;
+}
+.play.paused::after {
+  right: 11px;
+}
+
+/* Next */
+.next::before,
+.next::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+.next::before {
+  left: 10px;
+  border-left: 10px solid #50e3cd;
+}
+.next::after {
+  left: 20px;
+  border-left: 10px solid #50e3cd;
+}
+
+/* Previous (mirrored triangles) */
+.prev::before,
+.prev::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+.prev::before {
+  right: 10px;
+  border-right: 10px solid #50e3cd;
+}
+.prev::after {
+  right: 20px;
+  border-right: 10px solid #50e3cd;
+}
