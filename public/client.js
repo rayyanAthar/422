@@ -24,16 +24,41 @@ window.addEventListener("DOMContentLoaded", () => {
 
     socket.on("connect", () => console.log("Connected:", socket.id));
 
+
     socket.on("pins", (pins) => {
         pins.forEach(pin => {
-            const marker = L.marker([pin.lat, pin.lng]).addTo(map);
-
-            marker.bindPopup(`
+            const popupContent = document.createElement("div");
+            popupContent.innerHTML = `
                 <b>${pin.artist}</b><br>
                 <i>${pin.song}</i><br><br>
-                <button onclick="playSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Play</button>
-                <button onclick="queueSong('${pin.audio_url}', '${pin.song}', '${pin.artist}')">Queue</button>
-            `);
+                <button class="popup-play-btn">Play</button>
+                <button class="popup-queue-btn">Queue</button>
+            `;
+
+            const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+            marker.bindPopup(popupContent);
+
+            // Attach event listeners when popup opens
+            marker.on("popupopen", () => {
+                const playBtnPopup = popupContent.querySelector(".popup-play-btn");
+                const queueBtnPopup = popupContent.querySelector(".popup-queue-btn");
+
+                playBtnPopup.onclick = () => playSong(pin.audio_url, pin.song, pin.artist);
+
+                queueBtnPopup.onclick = () => {
+                    queueSong(pin.audio_url, pin.song, pin.artist);
+
+                    // Show notification
+                    const notification = document.getElementById("notification");
+                    notification.textContent = `"${pin.song}" added to queue`;
+                    notification.style.opacity = 1;
+
+                    // Hide after 1.5 seconds
+                    setTimeout(() => {
+                        notification.style.opacity = 0;
+                    }, 1500);
+                };
+            });
         });
     });
     
