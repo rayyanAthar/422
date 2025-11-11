@@ -43,5 +43,230 @@
         "lat": 41.794,
         "lng": -87.589,
         "audio_url": "https://oleafkuh.github.io/soundplace-tracks/MOHMOHRAP%20-%20Dollarz.mp3"
+    },
+    {
+        "id": 6,
+        "artist": "VADE",
+        "song": " Chinatown",
+        "location": " South Chicago",
+        "lat": 41.7397,
+        "lng": -87.5544,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/VADE%20-%20Chinatown.mp3 "
+    },
+    {
+        "id": 7,
+        "artist": "the Taft",
+        "song": " I usb I was hildi d you",
+        "location": " East Side",
+        "lat": 41.682,
+        "lng": -87.55,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/the%20Taft%20-%20I%20usb%20I%20was%20hildi%20d%20you.mp3"
+    },
+    {
+        "id": 8,
+        "artist": "Circus Marcus",
+        "song": " La Gang",
+        "location": " West Ridge",
+        "lat": 41.98,
+        "lng": -87.691,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Circus%20Marcus%20-%20La%20Gang.mp3"
+    },
+    {
+        "id": 9,
+        "artist": "Alex-Productions",
+        "song": " Horizons (short 1)",
+        "location": " Rogers Park",
+        "lat": 42.01,
+        "lng": -87.67,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Alex-Productions%20-%20Horizons%20%28short%201%29.mp3"
+    },
+    {
+        "id": 10,
+        "artist": "Dr Freebs",
+        "song": " Sunshine",
+        "location": " Lincoln Square",
+        "lat": 41.97,
+        "lng": -87.69,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Dr%20Freebs%20-%20Sunshine.mp3 "
+    },
+    {
+        "id": 11,
+        "artist": "Container",
+        "song": " Soak",
+        "location": " Lake View",
+        "lat": 41.941,
+        "lng": -87.655,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Container%20-%20Soak.mp3 "
+    },
+    {
+        "id": 12,
+        "artist": "fanisatt",
+        "song": " In the Middle of Nowhere (ft. Odarka)",
+        "location": " Uptown",
+        "lat": 41.97,
+        "lng": -87.66,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/fanisatt%20-%20In%20the%20Middle%20of%20Nowhere%20%28ft.%20Odarka%29.mp3"
+    },
+    {
+        "id": 13,
+        "artist": "The Pop Winds",
+        "song": " Will Be A Dream",
+        "location": " Edgewater",
+        "lat": 41.98,
+        "lng": -87.66,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/The%20Pop%20Winds%20-%20Will%20Be%20A%20Dream.mp3"
+    },
+    {
+        "id": 14,
+        "artist": "DICTION UNO",
+        "song": " Arachnid State of Mind",
+        "location": " West Town",
+        "lat": 41.9,
+        "lng": -87.68,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/DICTION%20UNO%20-%20Arachnid%20State%20of%20Mind.mp3"
+    },
+    {
+        "id": 15,
+        "artist": "Kuniya",
+        "song": " Higan no Hana",
+        "location": " Logan Square",
+        "lat": 41.9231,
+        "lng": -87.7093,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Kuniya%20-%20Higan%20no%20Hana.mp3"
+    },
+    {
+        "id": 16,
+        "artist": "Tim Evans",
+        "song": " Empty As My Head",
+        "location": " Humboldt Park",
+        "lat": 41.915,
+        "lng": -87.705,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Tim%20Evans%20-%20Empty%20As%20My%20Head.mp3"
+    },
+    {
+        "id": 17,
+        "artist": "Bryan Mathys",
+        "song": " Wild Heart",
+        "location": " Austin",
+        "lat": 41.88,
+        "lng": -87.76,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Bryan%20Mathys%20-%20Wild%20Heart.mp3"
+    },
+    {
+        "id": 18,
+        "artist": "Rex Hobart and Misery Boys",
+        "song": " Good Aint Gone",
+        "location": " Garfield Park",
+        "lat": 41.881,
+        "lng": -87.708,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Rex%20Hobart%20and%20Misery%20Boys%20-%20Good%20Ain%27t%20Gone.mp3"
+    },
+    {
+        "id": 19,
+        "artist": "New Soul",
+        "song": " New Soul",
+        "location": " Englewood",
+        "lat": 41.777,
+        "lng": -87.641,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Ketsa%20-%20New%20Soul.mp3 "
+    },
+    {
+        "id": 20,
+        "artist": "Broke For Free",
+        "song": " Calm The F*** Down",
+        "location": " Washington Heights",
+        "lat": 41.752,
+        "lng": -87.647,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Broke%20For%20Free%20-%20Calm%20The%20Fuck%20Down.mp3"
+    },
+    {
+        "id": 21,
+        "artist": "Measles Mumps Rubella",
+        "song": " Lighters Out",
+        "location": " Pullman",
+        "lat": 41.678,
+        "lng": -87.605,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Measles%20Mumps%20Rubella%20-%20Lighters%20Out.mp3"
+    },
+    {
+        "id": 22,
+        "artist": "BOYTOY",
+        "song": " Pulp",
+        "location": " Bronzeville",
+        "lat": 41.83,
+        "lng": -87.617,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/BOYTOY%20-%20Pulp.mp3"
+    },
+    {
+        "id": 23,
+        "artist": "GeoGenLabel",
+        "song": " \u0426\u0430\u0440\u044c \u041f\u044b\u043b\u0438 / The King of Dust ver1.0",
+        "location": " Bridgeport",
+        "lat": 41.833,
+        "lng": -87.645,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/GeoGenLabel%20-%20%D0%A6%D0%B0%D1%80%D1%8C%20%D0%9F%D1%8B%D0%BB%D0%B8%20_%20The%20King%20of%20Dust%20ver1.0.mp3"
+    },
+    {
+        "id": 24,
+        "artist": "CODESCORN",
+        "song": " streaming [sng]_mastered",
+        "location": " Pilsen",
+        "lat": 41.8505,
+        "lng": -87.669,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/CODESCORN%20-%20streaming%20%5Bsng%5D_mastered.mp3"
+    },
+    {
+        "id": 25,
+        "artist": "Vincent Augustus",
+        "song": " waste time",
+        "location": " West Loop",
+        "lat": 41.884,
+        "lng": -87.647,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Vincent%20Augustus%20-%20waste%20time.mp3"
+    },
+    {
+        "id": 26,
+        "artist": "Hogan Grip",
+        "song": " Stance Gives You Balance",
+        "location": " Brighton Park",
+        "lat": 41.85,
+        "lng": -87.706,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Hogan%20Grip%20-%20Stance%20Gives%20You%20Balance.mp3"
+    },
+    {
+        "id": 27,
+        "artist": "Richard Jonas",
+        "song": " space\u200b.\u200b.\u200b.\u200bdude (ietsje anders)",
+        "location": " Archer Heights",
+        "lat": 41.792,
+        "lng": -87.728,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Richard%20Jonas%20-%20space_._._._dude%20%28ietsje%20anders%29.mp3"
+    },
+    {
+        "id": 28,
+        "artist": "Monolog Rockstars",
+        "song": " Mini Copies",
+        "location": " Claering",
+        "lat": 41.785,
+        "lng": -87.784,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Monolog%20Rockstars%20-%20Mini%20Copies.mp3"
+    },
+    {
+        "id": 29,
+        "artist": "Vaniish",
+        "song": " Observatory Time",
+        "location": " Hegewisch",
+        "lat": 41.678,
+        "lng": -87.545,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Vaniish%20-%20Observatory%20Time.mp3"
+    },
+    {
+        "id": 30,
+        "artist": "Doug Gillard",
+        "song": " Peachy Gray",
+        "location": " Beverly",
+        "lat": 41.725,
+        "lng": -87.669,
+        "audio_url": " https://oleafkuh.github.io/soundplace-tracks/Doug%20Gillard%20-%20Peachy%20Gray.mp3"
     }
 ]
