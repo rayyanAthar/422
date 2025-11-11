@@ -80,13 +80,58 @@ const PORT = process.env.PORT || 3000;
 
 // Using async/await
 
-
-
-
 const raw = fs.readFileSync("database/pins.json", "utf-8");
 const pins = JSON.parse(raw);
 
 app.get("/api/pins", (req, res) => res.json(pins));
+
+const USERS_FILE = path.join(__dirname, "database/users.json");
+
+// helper to safely read users
+function loadUsers() {
+  if (!fs.existsSync(USERS_FILE)) return {};
+  return JSON.parse(fs.readFileSync(USERS_FILE, "utf-8"));
+}
+
+// helper to save users
+function saveUsers(users) {
+  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+}
+
+// Register user
+app.post("/api/register", (req, res) => {
+  const { username, password } = req.body;
+  const users = loadUsers();
+
+  if (users[username]) {
+    return res.json({ success: false, message: "Username already exists." });
+  }
+
+  users[username] = {
+    password,
+    playlists: [],
+    queue: [],
+  };
+
+  saveUsers(users);
+  res.json({ success: true, message: "Registration successful!" });
+});
+
+// Login user
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+  const users = loadUsers();
+
+  if (!users[username]) {
+    return res.json({ success: false, message: "User not found." });
+  }
+  if (users[username].password !== password) {
+    return res.json({ success: false, message: "Incorrect password." });
+  }
+
+  res.json({ success: true, message: "Login successful!" });
+});
+
 
 io.on("connection", (socket) => {
   console.log("🟢 Client connected:", socket.id);
@@ -98,5 +143,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}/login.html`);
 });
