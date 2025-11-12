@@ -143,5 +143,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}/login.html`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });

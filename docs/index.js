@@ -24,9 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     message.textContent = data.message;
 
     if (data.success) {
-      // store username locally for later use (optional)
       localStorage.setItem("user", username);
-      window.location.href = "/index.html"; // go to main app
+      window.location.href = "/app.html";
     }
   }
 

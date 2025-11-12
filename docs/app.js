@@ -1,7 +1,4 @@
-/* client.js
-   Combines functionality from variant 2 with the red styling + icon buttons from variant 1.
-   Expects /socket.io/socket.io.min.js and Leaflet to be loaded in the page.
-*/
+/* app.js */
 
 const socket = io();
 
