@@ -3,5 +3,25 @@
     "password": "123",
     "playlists": [],
     "queue": []
+  },
+  "abc": {
+    "password": "abc",
+    "playlists": [],
+    "queue": []
+  },
+  "new": {
+    "password": "new",
+    "playlists": [],
+    "queue": []
+  },
+  "xyz": {
+    "password": "xyz",
+    "playlists": [],
+    "queue": []
+  },
+  "newguy": {
+    "password": "newhugfd",
+    "playlists": [],
+    "queue": []
   }
 }

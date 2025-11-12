@@ -14,7 +14,89 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ).addTo(map);
 
-    // optional red icon for markers (keeps consistency)
+
+    let watchId;
+    function startTracking() {
+    if (!navigator.geolocation) {
+        alert("Geolocation not supported");
+        return;
+    }
+
+    // Clear previous watcher
+    if (watchId) navigator.geolocation.clearWatch(watchId);
+
+    watchId = navigator.geolocation.watchPosition(
+        pos => {
+        const { latitude, longitude } = pos.coords;
+        console.log("📍 Position update:", latitude, longitude);
+
+        if (!window.userMarker) {
+            window.userMarker = L.marker([latitude, longitude]).addTo(map);
+        } else {
+            window.userMarker.setLatLng([latitude, longitude]);
+        }
+
+        map.setView([latitude, longitude]);
+        },
+        err => {
+        console.error("❌ GPS error:", err);
+        },
+        {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 10000
+        }
+    );
+    }
+
+    startTracking();
+
+// {
+//     let userMarker = null;
+
+//   if ("geolocation" in navigator) {
+//     navigator.geolocation.watchPosition(
+//       (pos) => {
+//         const { latitude, longitude, accuracy } = pos.coords;
+
+//         const userLatLng = [latitude, longitude];
+
+//         // Create or move marker
+//         if (!userMarker) {
+//           userMarker = L.circleMarker(userLatLng, {
+//             radius: 8,
+//             color: "#007bff",
+//             fillColor: "#007bff",
+//             fillOpacity: 0.8
+//           }).addTo(map);
+//           userMarker.bindPopup("You are here");
+//           map.setView(userLatLng, 14);
+//         } else {
+//           userMarker.setLatLng(userLatLng);
+//         }
+
+//         console.log(
+//           `📍 Location: ${latitude.toFixed(5)}, ${longitude.toFixed(5)} (±${accuracy}m)`
+//         );
+//       },
+//       (err) => {
+//         console.error("Geolocation error:", err.message);
+//       },
+//       {
+//         enableHighAccuracy: true,
+//         maximumAge: 1000,
+//         timeout: 10000
+//       }
+//     );
+//   } else {
+//     console.warn("Geolocation not supported by this browser.");
+//   }
+// }
+
+    
+
+
+// optional red icon for markers (keeps consistency)
     const redIcon = L.icon({
         iconUrl:
             "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
