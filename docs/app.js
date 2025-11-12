@@ -1,6 +1,111 @@
-/* app.js */
+// app.js
 
 const socket = io();
+const pubUsername = localStorage.getItem("user");
+const pubPassword = localStorage.getItem("password");
+
+let userData = null;
+let songQueue = [];
+let playlists = {};
+let currentSong = null;
+let songIndex = -1;
+
+fetch(`/api/getUser/${pubUsername}`)
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      userData = data.data;
+      songQueue = userData.queue || [];
+      songIndex = userData.queueIndex || 0;
+      playlists = userData.playlists || {};
+      console.log("✅ Loaded user data:", userData);
+    } else {
+      console.warn("⚠️ Failed to load user:", data.message);
+      songQueue = [];
+    }
+
+    // Populate queue UI
+    const queueDiv = document.getElementById("queue");
+    songQueue.forEach(song => {
+      const newSongEl = document.createElement("div");
+      newSongEl.className = "queue-item";
+      newSongEl.textContent = `${song.artist} — ${song.title}`;
+      queueDiv.appendChild(newSongEl);
+    });
+
+    // Populate playlist sidebar
+const playlistContainer = document.getElementById("playlist");
+const playlistOptContainer = document.getElementById("playlistOpt");
+
+for (const [name, songs] of Object.entries(playlists)) {
+  // Create dropdown for each playlist
+  const dropdown = document.createElement("div");
+  dropdown.className = "dropdown";
+
+  const btn = document.createElement("button");
+  btn.className = "dropdown-btn";
+  btn.textContent = name;
+
+  const content = document.createElement("div");
+  content.id = `playlist-${name}`;
+  content.className = "dropdown-content";
+
+  // Add songs to dropdown
+  songs.forEach(song => {
+    const songBtn = document.createElement("button");
+    songBtn.className = "song-btn";
+    songBtn.textContent = song.title;
+    songBtn.dataset.url = song.url;
+    songBtn.dataset.artist = song.artist;
+    songBtn.addEventListener("click", () => {
+      playSong(songBtn.dataset.url, songBtn.textContent, songBtn.dataset.artist);
+    });
+    content.appendChild(songBtn);
+  });
+
+  dropdown.appendChild(btn);
+  dropdown.appendChild(content);
+  playlistContainer.appendChild(dropdown);
+
+  // Add option button for quick-add
+  const optBtn = document.createElement("button");
+  optBtn.className = "control-btn small";
+  optBtn.textContent = name;
+  optBtn.addEventListener("click", () => {
+    if (!currentSong) return;
+    const plContent = document.getElementById(`playlist-${name}`);
+    if (!plContent) return;
+
+    const newSongBtn = document.createElement("button");
+    newSongBtn.className = "song-btn";
+    newSongBtn.textContent = currentSong.title;
+    newSongBtn.dataset.url = currentSong.url;
+    newSongBtn.dataset.artist = currentSong.artist;
+    newSongBtn.addEventListener("click", () => {
+      playSong(newSongBtn.dataset.url, newSongBtn.textContent, newSongBtn.dataset.artist);
+    });
+
+    plContent.appendChild(newSongBtn);
+
+    // Update playlists object and save
+    playlists[name].push({ ...currentSong });
+    savePlaylists();
+    showTemporaryNotification(`Added "${currentSong.title}" to ${name}`);
+  });
+
+  playlistOptContainer.appendChild(optBtn);
+
+  // Toggle dropdown visibility
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle("active");
+  });
+}
+
+    
+  });
+
+
 
 // MAP SETUP
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     let watchId;
+    let currentLocation = {lat: null, lng: null};
     function startTracking() {
     if (!navigator.geolocation) {
         alert("Geolocation not supported");
@@ -25,8 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Clear previous watcher
     if (watchId) navigator.geolocation.clearWatch(watchId);
 
-    watchId = navigator.geolocation.watchPosition(
-        pos => {
+    watchId = navigator.geolocation.watchPosition( pos => {
+        currentLocation.lat = pos.coords.latitude;
+        currentLocation.lng = pos.coords.longitude;
         const { latitude, longitude } = pos.coords;
         console.log("📍 Position update:", latitude, longitude);
 
@@ -125,11 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const playlistDropdown = document.getElementById("playlistDropdown");
     const playlistOpt = document.getElementById("playlistOpt");
     const notification = document.getElementById("notification");
-
-    let currentSong = null;
-    let songIndex = -1;
-    let songQueue = [];
-    let playlists = [];
+    
 
     socket.on("connect", () => console.log("Socket connected:", socket.id));
 
@@ -138,13 +241,13 @@ document.addEventListener("DOMContentLoaded", () => {
         pins.forEach((pin) => {
             const marker = L.marker([pin.lat, pin.lng], { icon: redIcon }).addTo(map);
             marker.bindPopup(`
-        <div class="popup-content">
-          <b>${escapeHtml(pin.artist)}</b><br>
-          <i>${escapeHtml(pin.song)}</i><br><br>
-          <button class="popup-play-btn">Play</button>
-          <button class="popup-queue-btn">Queue</button>
-        </div>
-      `);
+                <div class="popup-content">
+                <b>${escapeHtml(pin.artist)}</b><br>
+                <i>${escapeHtml(pin.song)}</i><br><br>
+                <button class="popup-play-btn">Play</button>
+                <button class="popup-queue-btn">Queue</button>
+                </div>
+            `);
 
             marker.on("popupopen", function (e) {
                 const popupEl = e.popup.getElement();
@@ -187,92 +290,180 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
- // Create new playlist
+
+
+    // ------------------
+// Helper: Save playlists to server
+// ------------------
+function savePlaylists() {
+    console.log("Saving playlists:", playlists); // debug
+    fetch("/api/updateUser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: pubUsername,
+            updates: { playlists }
+        })
+    })
+    .then(res => res.json())
+    .then(data => console.log("✅ Playlists saved:", data))
+    .catch(err => console.error("❌ Save failed:", err));
+}
+
+// ------------------
+// Create playlist
+// ------------------
 createPlaylistBtn?.addEventListener("click", () => {
-  const name = prompt("Enter playlist name:");
-  if (!name) return;
+    if (!currentSong) {
+        alert("Play a song first before creating a playlist!");
+        return;
+    }
 
-  // Create dropdown for sidebar
-  const dropdown = document.createElement("div");
-  dropdown.className = "dropdown";
+    const name = prompt("Enter playlist name:");
+    if (!name) return;
 
-  const btn = document.createElement("button");
-  btn.className = "dropdown-btn";
-  btn.textContent = name;
+    if (!playlists[name]) playlists[name] = [];
+    playlists[name].push({ ...currentSong }); // add first song
 
-  const content = document.createElement("div");
-  content.id = name;
-  content.className = "dropdown-content";
+    // Create sidebar dropdown
+    const dropdown = document.createElement("div");
+    dropdown.className = "dropdown";
 
-  const songBtn = document.createElement("button");
-  songBtn.className = "control-btn";
-  songBtn.textContent = currentSong.title;
+    const btn = document.createElement("button");
+    btn.className = "dropdown-btn";
+    btn.textContent = name;
+
+    const content = document.createElement("div");
+    content.id = `playlist-${name}`;
+    content.className = "dropdown-content";
+
+    // Add first song to dropdown
+    const songBtn = document.createElement("button");
+    songBtn.className = "control-btn";
+    songBtn.textContent = currentSong.title;
     songBtn.dataset.url = currentSong.url;
     songBtn.dataset.artist = currentSong.artist;
-
-  songBtn.addEventListener("click", () => {
-    playSong(songBtn.dataset.url, songBtn.textContent, songBtn.dataset.artist);
+    songBtn.addEventListener("click", () => {
+        playSong(songBtn.dataset.url, songBtn.textContent, songBtn.dataset.artist);
     });
-  content.appendChild(songBtn);
+    content.appendChild(songBtn);
 
-  dropdown.appendChild(btn);
-  dropdown.appendChild(content);
+    dropdown.appendChild(btn);
+    dropdown.appendChild(content);
+    document.getElementById("playlist").appendChild(dropdown);
 
-  document.getElementById("playlist").appendChild(dropdown);
+    // Add option button for quick add
+    const optBtn = document.createElement("button");
+    optBtn.className = "control-btn small";
+    optBtn.textContent = name;
+    document.getElementById("playlistOpt").appendChild(optBtn);
 
-  // Add option to playlist dropdown menu
-  const optBtn = document.createElement("button");
-  optBtn.className = "control-btn small";
-  optBtn.textContent = name;
-  document.getElementById("playlistOpt").appendChild(optBtn);
+    showTemporaryNotification(`"${name}" playlist created`);
 
-  // Notification
-  showTemporaryNotification(`"${name}" playlist created`);
-
-  // Toggle dropdown visibility
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle("active");
-  });
-
-  // Add song to playlist when option clicked
-  optBtn.addEventListener("click", () => {
-    const pl = document.getElementById(name);
-    if (!pl) return;
-    const newSong = document.createElement("button");
-    newSong.className = "song-btn";
-    newSong.textContent = currentSong.title;
-    newSong.dataset.url = currentSong.url;
-    newSong.dataset.artist = currentSong.artist;
-
-    newSong.addEventListener("click", () => {
-    // audioPlayer.pause();
-        playSong(newSong.dataset.url, newSong.textContent, newSong.dataset.artist);
+    // Toggle dropdown visibility
+    btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("active");
     });
 
-    pl.appendChild(newSong);
-    showTemporaryNotification(`Added "${currentSong.title}" to ${name}`);
-  });
+    // Click to add current song to playlist
+    optBtn.addEventListener("click", () => {
+        if (!currentSong) return;
 
-//   newSong.addEventListener("click", () => {
-//     audioPlayer.pause();
+        const plContent = document.getElementById(`playlist-${name}`);
+        if (!plContent) return;
 
-//     playSong(newSong.dataset.url, newSong.textContent, newSong.dataset.artist);
-//   });
+        // Create new song button
+        const newSongBtn = document.createElement("button");
+        newSongBtn.className = "song-btn";
+        newSongBtn.textContent = currentSong.title;
+        newSongBtn.dataset.url = currentSong.url;
+        newSongBtn.dataset.artist = currentSong.artist;
+        newSongBtn.addEventListener("click", () => {
+            playSong(newSongBtn.dataset.url, newSongBtn.textContent, newSongBtn.dataset.artist);
+        });
+
+        plContent.appendChild(newSongBtn);
+
+        // Add to playlists object
+        playlists[name].push({ ...currentSong });
+
+        savePlaylists();
+        showTemporaryNotification(`Added "${currentSong.title}" to ${name}`);
+    });
+
+    // Save playlist immediately after creation
+    savePlaylists();
 });
 
-    // // buttons.forEach(button => { 
-    // // button.onclick = () => { 
-    // // if (!currentSong) return; 
-    // // if (audioPlayer.paused) { 
-    // // audioPlayer.play(); 
-    // // button.textContent = "⏸"; 
-    // // } else { 
-    // // audioPlayer.pause(); 
-    // // button.textContent = "▶"; 
-    // 
-    // } 
-    // }})
+//  // Create new playlist
+// createPlaylistBtn?.addEventListener("click", () => {
+//     const name = prompt("Enter playlist name:");
+//     if (!name) return;
+    
+
+//     // Create dropdown for sidebar
+//     const dropdown = document.createElement("div");
+//     dropdown.className = "dropdown";
+
+//     const btn = document.createElement("button");
+//     btn.className = "dropdown-btn";
+//     btn.textContent = name;
+
+//     const content = document.createElement("div");
+//     content.id = name;
+//     content.className = "dropdown-content";
+
+//     const songBtn = document.createElement("button");
+//     songBtn.className = "control-btn";
+//     songBtn.textContent = currentSong.title;
+//     songBtn.dataset.url = currentSong.url;
+//     songBtn.dataset.artist = currentSong.artist;
+
+//     songBtn.addEventListener("click", () => {
+//         playSong(songBtn.dataset.url, songBtn.textContent, songBtn.dataset.artist);
+//     });
+//     content.appendChild(songBtn);
+
+//     dropdown.appendChild(btn);
+//     dropdown.appendChild(content);
+
+//     document.getElementById("playlist").appendChild(dropdown);
+
+//     // Add option to playlist dropdown menu
+//     const optBtn = document.createElement("button");
+//     optBtn.className = "control-btn small";
+//     optBtn.textContent = name;
+//     document.getElementById("playlistOpt").appendChild(optBtn);
+
+//     // Notification
+//     showTemporaryNotification(`"${name}" playlist created`);
+
+//     // Toggle dropdown visibility
+//     btn.addEventListener("click", (e) => {
+//         e.stopPropagation();
+//         dropdown.classList.toggle("active");
+//     });
+
+//     // Add song to playlist when option clicked
+//     optBtn.addEventListener("click", () => {
+//         const pl = document.getElementById(name);
+//         if (!pl) return;
+//         const newSong = document.createElement("button");
+//         newSong.className = "song-btn";
+//         newSong.textContent = currentSong.title;
+//         newSong.dataset.url = currentSong.url;
+//         newSong.dataset.artist = currentSong.artist;
+
+//         newSong.addEventListener("click", () => {
+//         // audioPlayer.pause();
+//             playSong(newSong.dataset.url, newSong.textContent, newSong.dataset.artist);
+//         });
+
+//         pl.appendChild(newSong);
+//         showTemporaryNotification(`Added "${currentSong.title}" to ${name}`);
+//     });
+// });
 
     document.addEventListener("click", () => {
         document
@@ -298,12 +489,26 @@ createPlaylistBtn?.addEventListener("click", () => {
 
     // Queue a song
     window.queueSong = (url, title, artist) => {
-        songQueue.push({ url, title, artist });
+        songQueue.splice(songQueue.length + 1, 0, { url, title, artist });
+        // songQueue.push({ url, title, artist });
         const newSongEl = document.createElement("div");
         newSongEl.className = "queue-item";
         newSongEl.textContent = `${artist} — ${title}`;
         queueDiv.appendChild(newSongEl);
         showTemporaryNotification(`"${title}" added to queue`);
+
+            // 🔹 Save queue to server after update
+        fetch("/api/updateUser", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: pubUsername,
+                updates: { queue: songQueue }
+            })
+        })
+        .then(res => res.json())
+        .then(data => console.log("✅ Queue saved:", data))
+        .catch(err => console.error("❌ Save failed:", err));
     };
 
     // Play/pause toggle
@@ -325,6 +530,19 @@ createPlaylistBtn?.addEventListener("click", () => {
         if (songIndex > 0) {
             songIndex--;
             const s = songQueue[songIndex];
+
+            fetch("/api/updateUser", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: pubUsername,
+                    updates: { queueIndex: songIndex }
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log("✅ Queue saved:", data))
+            .catch(err => console.error("❌ Save failed:", err));
+
             if (s) playSong(s.url, s.title, s.artist);
         }
     };
@@ -332,6 +550,19 @@ createPlaylistBtn?.addEventListener("click", () => {
         if (songIndex < songQueue.length - 1) {
             songIndex++;
             const s = songQueue[songIndex];
+
+            fetch("/api/updateUser", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: pubUsername,
+                    updates: { queueIndex: songIndex }
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log("✅ Queue saved:", data))
+            .catch(err => console.error("❌ Save failed:", err));
+
             if (s) {
                 playSong(s.url, s.title, s.artist);
                 // remove first item from visual queue if present
@@ -361,10 +592,10 @@ createPlaylistBtn?.addEventListener("click", () => {
     showPlaylistBtn.onclick = () => {
         if (playlistSidebar.classList.contains("hidden")) {
             playlistSidebar.classList.remove("hidden");
-            showPlaylistBtn.textContent = "Hide Playlist";
+            showPlaylistBtn.textContent = "Hide Playlists";
         } else {
             playlistSidebar.classList.add("hidden");
-            showPlaylistBtn.textContent = "Playlists";
+            showPlaylistBtn.textContent = "Show Playlists";
         }
         setTimeout(() => {
             try {

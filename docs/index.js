@@ -1,3 +1,4 @@
+// index.js
 document.addEventListener("DOMContentLoaded", () => {
   const usernameInput = document.getElementById("username");
   const passwordInput = document.getElementById("password");
@@ -8,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   async function sendRequest(endpoint) {
     const username = usernameInput.value.trim();
     const password = passwordInput.value.trim();
+
+    window.pubUsername = username;
+    window.pubPassword = password;
 
     if (!username || !password) {
       message.textContent = "Please fill out all fields.";
@@ -25,6 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (data.success) {
       localStorage.setItem("user", username);
+      window.location.href = "/app.html";
+      localStorage.setItem("password", password);
       window.location.href = "/app.html";
     }
   }

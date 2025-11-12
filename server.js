@@ -109,8 +109,9 @@ app.post("/api/register", (req, res) => {
 
   users[username] = {
     password,
-    playlists: [],
+    playlists: {},
     queue: [],
+    queueIndex: 0
   };
 
   saveUsers(users);
@@ -131,6 +132,40 @@ app.post("/api/login", (req, res) => {
 
   res.json({ success: true, message: "Login successful!" });
 });
+
+// Update user data (like queue or playlists)
+app.post("/api/updateUser", (req, res) => {
+  const { username, updates } = req.body;
+
+  if (!username || !updates) {
+    return res.status(400).json({ success: false, message: "Missing data" });
+  }
+
+  const users = loadUsers();
+
+  if (!users[username]) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  // Merge updates into existing user data
+  Object.assign(users[username], updates);
+
+  saveUsers(users);
+
+  res.json({ success: true, message: "User data saved" });
+});
+
+app.get("/api/getUser/:username", (req, res) => {
+  const username = req.params.username;
+  const users = loadUsers();
+
+  if (!users[username]) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  res.json({ success: true, data: users[username] });
+});
+
 
 
 io.on("connection", (socket) => {
