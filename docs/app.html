@@ -1,68 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SoundPlace</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="/app.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="app-container">
-    <!-- Sidebar: Queue -->
-    <aside id="sidebar-left" class="hidden">
-      <h2 class="sidebar-title">QUEUE</h2>
-      <div id="queue" class="sidebar-content"></div>
-    </aside>
 
-    <!-- Main Section -->
-    <main id="main-content">
-      <div id="options">
-          <button id="showQueueBtn" class="secondary-btn">Show Queue</button>
-          <button id="showPlaylistBtn" class="secondary-btn">Show Playlists</button>
+<!-- FLOATING GLASS PLAYER -->
+<div id="floating-player">
+  <div id="player-content">
+    <div id="songInfo">No song playing</div>
 
-          <div class="dropdown" id="playlistDropdown">
-            <button id="playlistBtn" class="dropdown-btn">Add to Playlist</button>
-            <div id="playlistOpt" class="dropdown-content" aria-hidden="true">
-              <button id="createPlaylistBtn" class="control-btn small">Create New Playlist</button>
-            </div>
-          </div>
-        </div>
-      <div id="map"></div>
+    <div id="controls" class="icon-controls">
+      <button id="prevBtn" class="icon-btn prev" aria-label="Previous"></button>
+      <button id="playBtn" class="icon-btn play" aria-label="Play"></button>
+      <button id="nextBtn" class="icon-btn next" aria-label="Next"></button>
+    </div>
 
-      <div id="player-container">
-        <div id="songInfo">No song playing</div>
-
-        <div id="controls" class="icon-controls">
-          <button id="prevBtn" class="icon-btn prev" aria-label="previous"></button>
-          <button id="playBtn" class="icon-btn play" aria-label="play-pause"></button>
-          <button id="nextBtn" class="icon-btn next" aria-label="next"></button>
-        </div>
-
-        
-      </div>
-
-      <div id="time-container">
-        <input type="range" id="seekSlider" min="0" value="0" step="0.01">
-        <span id="timeLabel">0:00 / 0:00</span>
-      </div>
-    </main>
-
-    <!-- Sidebar: Playlists -->
-    <aside id="sidebar-right" class="hidden">
-      <h2 class="sidebar-title">PLAYLISTS</h2>
-      <div id="playlist" class="sidebar-content">
-        <div id="DropDown" class="dropdown">
-          
-        </div>
-      </div>
-    </aside>
+    <div id="time-container">
+      <input type="range" id="seekSlider" min="0" value="0" step="0.01">
+      <span id="timeLabel">0:00 / 0:00</span>
+    </div>
   </div>
+</div>
 
-  <div id="notification" role="status" aria-live="polite"></div>
+<!-- MAIN APP -->
+<div id="app-container">
+  <!-- LEFT: QUEUE -->
+  <aside id="sidebar-left" class="panel">
+    <button id="showQueueBtn" class="panel-toggle">Queue</button>
+    <div id="queue" class="panel-body"></div>
+  </aside>
 
-  <script src="/socket.io/socket.io.min.js"></script>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="/app.js"></script>  
+  <!-- CENTER: MAP + TOP BAR -->
+  <main id="main-content">
+    <div id="top-bar">
+
+      <div class="dropdown">
+        <button id="playlistBtn" class="bar-btn primary">Add to Playlist</button>
+        <div id="playlistOpt" class="dropdown-menu">
+          <button id="createPlaylistBtn" class="menu-item">Create New</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP IS HERE -->
+    <div id="map"></div>
+  </main>
+
+  <!-- RIGHT: PLAYLISTS -->
+  <aside id="sidebar-right" class="panel">
+    <button id="showPlaylistBtnRight" class="panel-toggle">Playlists</button>
+    <div id="playlist" class="panel-body"></div>
+  </aside>
+</div>
+
+<div id="notification"></div>
+
+<!-- SCRIPTS -->
+<script src="/socket.io/socket.io.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/app.js"></script>
 </body>
 </html>

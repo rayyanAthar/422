@@ -2,25 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SoundPlace Login</title>
+  <title>SoundPlace — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/index.css">
 </head>
 <body>
+  <div class="wave"></div>
+
   <div class="login-container">
     <h1>SoundPlace</h1>
+    <p class="tagline">Discover your sound.</p>
+
     <div class="form-group">
-      <input type="text" id="username" placeholder="Username" />
+      <input type="text" id="username" placeholder="Username" required>
     </div>
     <div class="form-group">
-      <input type="password" id="password" placeholder="Password" />
+      <input type="password" id="password" placeholder="Password" required>
     </div>
+
     <div class="buttons">
       <button id="loginBtn">Log In</button>
       <button id="registerBtn">Register</button>
     </div>
+
     <p id="message"></p>
   </div>
 
   <script src="/index.js"></script>
+  <script>
+    // Enable Enter key to log in
+    document.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") document.getElementById("loginBtn").click();
+    });
+  </script>
 </body>
 </html>

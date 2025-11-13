@@ -28,9 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
     message.textContent = data.message;
 
     if (data.success) {
-      localStorage.setItem("user", username);
+      sessionStorage.setItem("user", username);
       window.location.href = "/app.html";
-      localStorage.setItem("password", password);
+      sessionStorage.setItem("password", password);
       window.location.href = "/app.html";
     }
   }

@@ -1,3 +1,30 @@
 {
-
+  "A": {
+    "password": "1",
+    "playlists": {
+      "dfndkfn": [
+        {
+          "url": "https://oleafkuh.github.io/soundplace-tracks/SunnyScy%20-%20It%27s%20a%20Party%21.mp3",
+          "title": "Its a Party!q",
+          "artist": "SunnyScy"
+        }
+      ]
+    },
+    "queue": [],
+    "queueIndex": -1
+  },
+  "B": {
+    "password": "2",
+    "playlists": {
+      "qin": [
+        {
+          "url": " https://oleafkuh.github.io/soundplace-tracks/Vincent%20Augustus%20-%20waste%20time.mp3",
+          "title": " waste time",
+          "artist": "Vincent Augustus"
+        }
+      ]
+    },
+    "queue": [],
+    "queueIndex": -1
+  }
 }

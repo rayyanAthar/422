@@ -111,7 +111,7 @@ app.post("/api/register", (req, res) => {
     password,
     playlists: {},
     queue: [],
-    queueIndex: 0
+    queueIndex: -1
   };
 
   saveUsers(users);
@@ -136,24 +136,43 @@ app.post("/api/login", (req, res) => {
 // Update user data (like queue or playlists)
 app.post("/api/updateUser", (req, res) => {
   const { username, updates } = req.body;
-
-  if (!username || !updates) {
-    return res.status(400).json({ success: false, message: "Missing data" });
-  }
+  if (!username || !updates) return res.status(400).json({ success: false, message: "Missing data" });
 
   const users = loadUsers();
+  if (!users[username]) return res.status(404).json({ success: false, message: "User not found" });
 
-  if (!users[username]) {
-    return res.status(404).json({ success: false, message: "User not found" });
+  // Merge queue
+  if (updates.queue) {
+    users[username].queue = users[username].queue || [];
+    updates.queue.forEach(song => {
+      if (!users[username].queue.find(s => s.url === song.url)) {
+        users[username].queue.push(song);
+      }
+    });
   }
 
-  // Merge updates into existing user data
-  Object.assign(users[username], updates);
+  // Merge playlists
+  if (updates.playlists) {
+    users[username].playlists = users[username].playlists || {};
+    for (const [name, songs] of Object.entries(updates.playlists)) {
+      if (!users[username].playlists[name]) users[username].playlists[name] = [];
+      songs.forEach(s => {
+        if (!users[username].playlists[name].find(x => x.url === s.url)) {
+          users[username].playlists[name].push(s);
+        }
+      });
+    }
+  }
+
+  // Merge queueIndex
+  if (updates.queueIndex !== undefined) {
+    users[username].queueIndex = updates.queueIndex;
+  }
 
   saveUsers(users);
-
   res.json({ success: true, message: "User data saved" });
 });
+
 
 app.get("/api/getUser/:username", (req, res) => {
   const username = req.params.username;
