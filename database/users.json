@@ -1,14 +1,1 @@
-{
-  "A": {
-    "password": "1",
-    "playlists": {},
-    "queue": [],
-    "queueIndex": -1
-  },
-  "B": {
-    "password": "2",
-    "playlists": {},
-    "queue": [],
-    "queueIndex": -1
-  }
-}
+{}

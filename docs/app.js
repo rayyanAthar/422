@@ -40,14 +40,53 @@ const nextBtn = document.getElementById("nextBtn");
 const showQueueBtn = document.getElementById("showQueueBtn");
 const showPlaylistBtnRight = document.getElementById("showPlaylistBtnRight");
 const playlistBtn = document.getElementById("playlistBtn");
-const queueDiv = document.getElementById("queue");
+const queueModalBody = document.getElementById("queueModalBody");
+const playlistModalBody = document.getElementById("playlistModalBody");
 const seekSlider = document.getElementById("seekSlider");
 const timeLabel = document.getElementById("timeLabel");
-const queueSidebar = document.getElementById("sidebar-left");
-const playlistSidebar = document.getElementById("sidebar-right");
 const playlistDropdown = document.querySelector("#top-bar .dropdown");
 const playlistOpt = document.getElementById("playlistOpt");
 const notification = document.getElementById("notification");
+
+// Modal elements
+const queueModal = document.getElementById("queueModal");
+const playlistModal = document.getElementById("playlistModal");
+const modalOverlay = document.getElementById("modalOverlay");
+const closeButtons = document.querySelectorAll('.modal-close');
+
+// ------------------
+// MODAL CONTROLS
+// ------------------
+function openModal(modal) {
+  closeAllModals();
+  modal.classList.add('active');
+  modalOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAllModals() {
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.classList.remove('active');
+  });
+  modalOverlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Modal event listeners
+showQueueBtn.addEventListener('click', () => openModal(queueModal));
+showPlaylistBtnRight.addEventListener('click', () => openModal(playlistModal));
+modalOverlay.addEventListener('click', closeAllModals);
+
+closeButtons.forEach(button => {
+  button.addEventListener('click', closeAllModals);
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeAllModals();
+  }
+});
 
 // ------------------
 // HELPERS
@@ -106,7 +145,6 @@ async function savePlaylists() {
   }
 }
 
-
 async function saveQueue() {
   try {
     const res = await fetch(`/api/getUser/${pubUsername}`);
@@ -132,7 +170,6 @@ async function saveQueue() {
   }
 }
 
-
 function updateQueueIndex() {
   fetch("/api/updateUser", {
     method: "POST",
@@ -145,25 +182,41 @@ function updateQueueIndex() {
 // UI POPULATION
 // ------------------
 function populateQueueUI() {
-  queueDiv.innerHTML = "";
+  queueModalBody.innerHTML = "";
+  
+  if (songQueue.length === 0) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "modal-empty";
+    emptyState.textContent = "Queue is empty. Add songs from the map!";
+    queueModalBody.appendChild(emptyState);
+    return;
+  }
+  
   songQueue.forEach((song, i) => {
     const el = document.createElement("div");
-    el.className = "queue-item";
+    el.className = i === songIndex ? "queue-item current" : "queue-item";
     el.textContent = `${song.artist} — ${song.title}`;
-    if (i === songIndex) el.style.fontWeight = "600";
-    queueDiv.appendChild(el);
+    
+    // Make queue items clickable to play
+    el.addEventListener('click', () => {
+      songIndex = i;
+      playSong(song.url, song.title, song.artist);
+      populateQueueUI(); // Refresh to update current song highlight
+      updateQueueIndex();
+    });
+    
+    queueModalBody.appendChild(el);
   });
 }
 
-/* -------------------------------------------------------------
-   IMPORTANT: this function now **also binds** the
-   "Create New" button every time it is (re)created.
-   ------------------------------------------------------------- */
 function bindCreatePlaylistBtn() {
   const btn = document.getElementById("createPlaylistBtn");
   if (!btn) return;
   btn.onclick = () => {
-    if (!currentSong) return alert("Play a song first!");
+    if (!currentSong) {
+      showTemporaryNotification("Play a song first!");
+      return;
+    }
     const name = prompt("Playlist name:");
     if (!name) return;
     playlists[name] = [currentSong];
@@ -174,33 +227,64 @@ function bindCreatePlaylistBtn() {
 }
 
 function populatePlaylistsUI() {
-  const container = document.getElementById("playlist");
+  const container = playlistModalBody;
   const optContainer = document.getElementById("playlistOpt");
   container.innerHTML = "";
-  optContainer.innerHTML = `<button id="createPlaylistBtn" class="menu-item">Create New</button>`;
+  optContainer.innerHTML = `<button id="createPlaylistBtn" class="menu-item">Create New Playlist</button>`;
 
   // ---- re‑bind the freshly created button ----
   bindCreatePlaylistBtn();
 
+  // Show empty state if no playlists
+  if (Object.keys(playlists).length === 0) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "modal-empty";
+    emptyState.textContent = "No playlists yet. Create your first one!";
+    container.appendChild(emptyState);
+  }
+
   for (const [name, songs] of Object.entries(playlists)) {
-    // right‑sidebar dropdown
+    // playlist modal dropdown
     const dropdown = document.createElement("div");
     dropdown.className = "dropdown";
 
     const btn = document.createElement("button");
     btn.className = "dropdown-btn";
-    btn.textContent = name;
+    
+    const btnContent = document.createElement("span");
+    btnContent.textContent = name;
+    
+    const countBadge = document.createElement("span");
+    // countBadge.className = "playlist-count";
+    countBadge.textContent = "";
+    
+    btn.appendChild(btnContent);
+    btn.appendChild(countBadge);
 
     const content = document.createElement("div");
     content.className = "dropdown-content";
 
-    songs.forEach(s => {
-      const sbtn = document.createElement("button");
-      sbtn.className = "song-btn";
-      sbtn.textContent = s.title;
-      sbtn.onclick = () => playSong(s.url, s.title, s.artist);
-      content.appendChild(sbtn);
-    });
+    // Show empty state for playlist if no songs
+    if (songs.length === 0) {
+      const emptySong = document.createElement("button");
+      emptySong.className = "song-btn";
+      emptySong.textContent = "No songs in this playlist";
+      emptySong.style.color = "rgba(255,255,255,.4)";
+      emptySong.style.cursor = "default";
+      emptySong.onclick = (e) => e.preventDefault();
+      content.appendChild(emptySong);
+    } else {
+      songs.forEach(s => {
+        const sbtn = document.createElement("button");
+        sbtn.className = "song-btn";
+        sbtn.textContent = `${s.artist} — ${s.title}`;
+        sbtn.onclick = () => {
+          playSong(s.url, s.title, s.artist);
+          closeAllModals();
+        };
+        content.appendChild(sbtn);
+      });
+    }
 
     dropdown.appendChild(btn);
     dropdown.appendChild(content);
@@ -209,17 +293,54 @@ function populatePlaylistsUI() {
     // top‑bar quick‑add button
     const optBtn = document.createElement("button");
     optBtn.className = "menu-item";
-    optBtn.textContent = name;
+    
+    const optText = document.createElement("span");
+    optText.textContent = name;
+    
+    const optCount = document.createElement("span");
+    optCount.textContent = songs.length;
+    optCount.style.background = "rgba(255,255,255,.2)";
+    optCount.style.padding = "2px 6px";
+    optCount.style.borderRadius = "8px";
+    optCount.style.fontSize = "0.7em";
+    
+    optBtn.appendChild(optText);
+    optBtn.appendChild(optCount);
+    
     optBtn.onclick = () => {
-      if (!currentSong) return;
+      if (!currentSong) {
+        showTemporaryNotification("No song playing!");
+        return;
+      }
+      // Check if song already exists in playlist
+      if (playlists[name].find(s => s.url === currentSong.url)) {
+        showTemporaryNotification("Song already in playlist!");
+        return;
+      }
+      
+      // Add to playlist
+      playlists[name].push({ ...currentSong });
+      
+      // Update the UI
+      if (content.querySelector('.song-btn[style*="rgba(255,255,255,.4)"]')) {
+        content.innerHTML = ''; // Remove empty state
+      }
+      
       const newBtn = document.createElement("button");
       newBtn.className = "song-btn";
-      newBtn.textContent = currentSong.title;
-      newBtn.onclick = () => playSong(currentSong.url, currentSong.title, currentSong.artist);
+      newBtn.textContent = `${currentSong.artist} — ${currentSong.title}`;
+      newBtn.onclick = () => {
+        playSong(currentSong.url, currentSong.title, currentSong.artist);
+        closeAllModals();
+      };
       content.appendChild(newBtn);
-      playlists[name].push({ ...currentSong });
+      
+      // Update counts
+      countBadge.textContent = playlists[name].length;
+      optCount.textContent = playlists[name].length;
+      
       savePlaylists();
-      showTemporaryNotification(`Added to ${name}`);
+      showTemporaryNotification(`Added to "${name}"`);
     };
     optContainer.appendChild(optBtn);
 
@@ -230,7 +351,6 @@ function populatePlaylistsUI() {
     };
   }
 }
-
 // ------------------
 // AUDIO CONTROLS
 // ------------------
@@ -241,14 +361,14 @@ window.playSong = (url, title, artist) => {
   audioPlayer.play().catch(() => {});
   songInfo.textContent = `${artist} — ${title}`;
   playBtn.classList.replace("play", "pause");
+  
+  // Update queue highlighting
+  populateQueueUI();
 };
 
 window.queueSong = (url, title, artist) => {
   songQueue.push({ url, title, artist });
-  const el = document.createElement("div");
-  el.className = "queue-item";
-  el.textContent = `${artist} — ${title}`;
-  queueDiv.appendChild(el);
+  populateQueueUI(); // Refresh the queue modal
   showTemporaryNotification(`"${title}" queued`);
   saveQueue();
 };
@@ -276,10 +396,13 @@ nextBtn.onclick = () => {
   if (songIndex < songQueue.length - 1) {
     songIndex++;
     const s = songQueue[songIndex];
-    if (s) {
-      playSong(s.url, s.title, s.artist);
-      queueDiv.removeChild(queueDiv.firstChild);
-    }
+    if (s) playSong(s.url, s.title, s.artist);
+    updateQueueIndex();
+  } else if (songQueue.length > 0) {
+    // If we're at the end, loop back to start
+    songIndex = 0;
+    const s = songQueue[songIndex];
+    if (s) playSong(s.url, s.title, s.artist);
     updateQueueIndex();
   }
 };
@@ -305,25 +428,13 @@ audioPlayer.onended = () => {
     currentSong = null;
     songInfo.textContent = "No song playing";
     playBtn.classList.replace("pause", "play");
+    populateQueueUI(); // Remove current song highlight
   }
 };
 
 // ------------------
-// SIDEBARS
+// DROPDOWN CONTROLS
 // ------------------
-showQueueBtn.onclick = () => {
-  queueSidebar.classList.toggle("open");
-  showQueueBtn.textContent = queueSidebar.classList.contains("open") ? pubUsername : "Queue";
-};
-
-[showPlaylistBtnRight].forEach(btn => {
-  btn.onclick = () => {
-    playlistSidebar.classList.toggle("open");
-    const open = playlistSidebar.classList.contains("open");
-    [showPlaylistBtnRight].forEach(b => b.textContent = open ? pubPassword : "Playlists");
-  };
-});
-
 playlistBtn.onclick = e => {
   e.stopPropagation();
   playlistDropdown.classList.toggle("active");
@@ -334,7 +445,7 @@ window.onclick = () => {
 };
 
 // ------------------
-// MAP & PINS (unchanged, still works)
+// MAP & PINS
 // ------------------
 let map, userMarker;
 
@@ -376,6 +487,13 @@ document.addEventListener("DOMContentLoaded", () => {
   socket.on("connect", () => console.log("Connected:", socket.id));
 
   socket.on("pins", pins => {
+    // Clear existing pins (except user marker)
+    map.eachLayer(layer => {
+      if (layer instanceof L.Marker && layer !== userMarker) {
+        map.removeLayer(layer);
+      }
+    });
+
     pins.forEach(pin => {
       const marker = L.marker([pin.lat, pin.lng], { icon: redIcon }).addTo(map);
       marker.bindPopup(`

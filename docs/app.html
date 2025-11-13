@@ -30,16 +30,13 @@
 
 <!-- MAIN APP -->
 <div id="app-container">
-  <!-- LEFT: QUEUE -->
-  <aside id="sidebar-left" class="panel">
-    <button id="showQueueBtn" class="panel-toggle">Queue</button>
-    <div id="queue" class="panel-body"></div>
-  </aside>
+  <!-- TOGGLE BUTTONS - ALWAYS VISIBLE -->
+  <button id="showQueueBtn" class="panel-toggle">Queue</button>
+  <button id="showPlaylistBtnRight" class="panel-toggle">Playlists</button>
 
   <!-- CENTER: MAP + TOP BAR -->
   <main id="main-content">
     <div id="top-bar">
-
       <div class="dropdown">
         <button id="playlistBtn" class="bar-btn primary">Add to Playlist</button>
         <div id="playlistOpt" class="dropdown-menu">
@@ -48,16 +45,46 @@
       </div>
     </div>
 
-    <!-- MAP IS HERE -->
+    <!-- MAP -->
     <div id="map"></div>
   </main>
-
-  <!-- RIGHT: PLAYLISTS -->
-  <aside id="sidebar-right" class="panel">
-    <button id="showPlaylistBtnRight" class="panel-toggle">Playlists</button>
-    <div id="playlist" class="panel-body"></div>
-  </aside>
 </div>
+
+<!-- QUEUE MODAL -->
+<div class="modal" id="queueModal">
+  <div class="modal-header">
+    <h2 class="modal-title">Current Queue</h2>
+    <button class="modal-close">&times;</button>
+  </div>
+  <div class="modal-body" id="queueModalBody">
+    <!-- Queue items will be populated here -->
+    <div class="queue-item">Song 1 - Artist 1</div>
+    <div class="queue-item">Song 2 - Artist 2</div>
+    <div class="queue-item">Song 3 - Artist 3</div>
+  </div>
+</div>
+
+<!-- PLAYLIST MODAL -->
+<div class="modal" id="playlistModal">
+  <div class="modal-header">
+    <h2 class="modal-title">Your Playlists</h2>
+    <button class="modal-close">&times;</button>
+  </div>
+  <div class="modal-body" id="playlistModalBody">
+    <!-- Playlist content will be populated here -->
+    <div class="dropdown">
+      <button class="dropdown-btn">Favorites Playlist</button>
+      <div class="dropdown-content">
+        <button class="song-btn">Song 1</button>
+        <button class="song-btn">Song 2</button>
+        <button class="song-btn">Song 3</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL OVERLAY -->
+<div class="modal-overlay" id="modalOverlay"></div>
 
 <div id="notification"></div>
 
@@ -65,5 +92,3 @@
 <script src="/socket.io/socket.io.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/app.js"></script>
-</body>
-</html>
