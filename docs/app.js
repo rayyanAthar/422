@@ -336,7 +336,7 @@ function populatePlaylistsUI() {
       content.appendChild(newBtn);
       
       // Update counts
-      countBadge.textContent = playlists[name].length;
+    //   countBadge.textContent = playlists[name].length;
       optCount.textContent = playlists[name].length;
       
       savePlaylists();
@@ -448,6 +448,7 @@ window.onclick = () => {
 // MAP & PINS
 // ------------------
 let map, userMarker;
+let autoCenterView = true; 
 
 document.addEventListener("DOMContentLoaded", () => {
   map = L.map("map").setView([41.8781, -87.6298], 13);
@@ -456,6 +457,11 @@ document.addEventListener("DOMContentLoaded", () => {
     subdomains: "abcd",
     maxZoom: 19
   }).addTo(map);
+
+  map.on('movestart', function() {
+      autoCenterView = false;
+  });
+
 
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(pos => {
@@ -468,10 +474,16 @@ document.addEventListener("DOMContentLoaded", () => {
           weight: 2,
           fillOpacity: 1
         }).addTo(map);
+
+        map.setView([latitude, longitude], 15);
+
       } else {
         userMarker.setLatLng([latitude, longitude]);
       }
-      map.setView([latitude, longitude], 15);
+
+      if (autoCenterView) {
+        map.setView([latitude, longitude], 15);
+      }
     }, console.error, { enableHighAccuracy: true });
   }
 

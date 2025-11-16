@@ -1,1 +1,14 @@
-{}
+{
+  "Testing": {
+    "password": "T",
+    "playlists": {},
+    "queue": [
+      {
+        "url": " https://oleafkuh.github.io/soundplace-tracks/Monolog%20Rockstars%20-%20Mini%20Copies.mp3",
+        "title": " Mini Copies",
+        "artist": "Monolog Rockstars"
+      }
+    ],
+    "queueIndex": 0
+  }
+}
